@@ -1,4 +1,6 @@
 namespace TBrush {
+  //#region const
+
   const TBRUSH_REGEX = /\{\{(.+?)\}\}/gs;
   
   const STATEMENT_REGEX = /^@(.+)/;
@@ -8,6 +10,25 @@ namespace TBrush {
   const STATEMENT_START_REGEX = /^(\w+)\s(?:\((.*?)\))?$/;
   // group 1 (\w+): keyword
   const STATEMENT_END_REGEX = /^\/(\w+)/;
+
+  const CORE_STATEMENTS: Record<string, TBrushStatementFunction> = {
+    if(context, parameters, body) {
+      return "";
+    },
+    else(context, parameters, body) {
+      return "";
+    },
+    elseif(context, parameters, body) {
+      return "";
+    },
+
+    for(context, parameters, body) {
+      return "";
+    }
+  };
+
+  const CONTEXT = null;
+  type CONTEXT_TYPE = typeof CONTEXT;
   
   //#region token list
   
@@ -216,20 +237,19 @@ namespace TBrush {
   export type TBrushObject = Record<string, any>;
 
   export type TBrushStatementFunction =
-    (parameters: string, body: string) => string;
+    (context: CONTEXT_TYPE, parameters: string, body: string) => string;
 
   export class TBrushTemplate {
     #tree: NodeTree;
     
     #config: TBrushConfig | undefined;
 
-    #statementConfig: Record<string, TBrushStatementFunction> = {};
+    #statementConfig: Record<string, TBrushStatementFunction> = {
+      ...CORE_STATEMENTS
+    };
 
     statements = {
-      add: (keyword: string, callback: TBrushStatementFunction) => {
-        this.#statementConfig[keyword] = callback;
-      },
-      addMultiple: (statements: Record<string, TBrushStatementFunction>) => {
+      add: (statements: Record<string, TBrushStatementFunction>) => {
         for (const keyword in statements)
           this.#statementConfig[keyword] = statements[keyword];
       },
