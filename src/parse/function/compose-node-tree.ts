@@ -1,32 +1,36 @@
+import { ExpressionNode } from "../class/expression-node.ts";
+import { NodeArray } from "../class/node-array.ts";
+import { StatementNode } from "../class/statement-node.ts";
+import { TemplateNode } from "../class/template-node.ts";
 import { NodeType } from "../enum/node-type.ts";
 import { TokenType } from "../../tokenize/enum/token-type.ts";
-import type { NodeTree } from "../type/node-tree.ts";
+import type { RootNode } from "../type/root-node.ts";
 import type { TokenList } from "../../tokenize/type/token-list.ts";
 
-export function composeNodeTree(list: TokenList): NodeTree {
-  const tree: NodeTree = [];
+export function composeNodeTree(list: TokenList, parent?: StatementNode): NodeArray {
+  const tree = new NodeArray();
 
   for (let index = 0; index < list.length; index++) {
     const token = list[index];
 
     switch (token.type) {
       case TokenType.Template:
-        tree.push({
-          type: NodeType.Template,
+        tree.push(new TemplateNode({
+          parent: parent ?? null,
           content: token.content
-        });
+        }));
         break;
       case TokenType.Expression:
-        tree.push({
-          type: NodeType.Expression,
+        tree.push(new ExpressionNode({
+          parent: parent ?? null,
           content: token.content
-        });
+        }));
         break;
       case TokenType.StatementStart:
         const children: TokenList = [];
-        let scope = 0;
         index++;
-
+        let scope = 0;
+        
         while (
           index < list.length
           && (
@@ -39,25 +43,24 @@ export function composeNodeTree(list: TokenList): NodeTree {
           if (child.type === TokenType.StatementStart)
             scope++;
           else if (child.type === TokenType.StatementEnd)
-            scope--;
+            if (child.keyword == token.keyword)
+              scope--;
+            else
+              throw new Error("Syntax error: mismatched statemend end node");
 
           children.push(child);
 
           index++;
         }
 
-        tree.push({
-          type: NodeType.Statement,
+        tree.push(new StatementNode({
+          parent: parent ?? null,
           keyword: token.keyword,
           parameters: token.parameters,
           children: composeNodeTree(children)
-        });
+        }));
 
         break;
-      case TokenType.StatementEnd:
-        throw "unreachable";
-        // `TokenType.StatementEnd` should never be `token`'s type given the
-        // loop
     }
   }
 
