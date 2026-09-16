@@ -44,7 +44,7 @@ export function composeTokenList(page: string): TokenList {
       tokenList.push({
         type: TokenType.StatementVoid,
         keyword: statementVoid[1],
-        parameters: statementVoid[2]
+        parameters: statementVoid[2] ?? null
       });
 
       continue;
@@ -70,7 +70,7 @@ export function composeTokenList(page: string): TokenList {
     tokenList.push({
       type: TokenType.StatementStart,
       keyword: statementStart[1],
-      parameters: statementStart[2]
+      parameters: statementStart[2] ?? null
     });
   }
 

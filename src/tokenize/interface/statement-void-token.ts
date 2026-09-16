@@ -3,5 +3,5 @@ import type { TokenType } from "../enum/token-type.ts";
 
 export interface StatementVoidToken extends Token<TokenType.StatementVoid> {
   keyword: string;
-  parameters: string;
+  parameters: string | null;
 }

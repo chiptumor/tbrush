@@ -4,11 +4,17 @@ const _testPages: [ string, Record<string, any> ][] = [
   [
     `
 <ul>
-  {{@for (blinky of blinkies) }}
-    <li><a href="{{ blinky.href }}">
-      <img src="{{ blinky.img }}" />
-    </a></li>
-  {{@/for}}
+  {{@ for (blinky of blinkies) }}
+    <li>
+      {{@ if (blinky.href) }}
+        <a href="{{ blinky.href }}">
+          <img src="{{ blinky.img }}" />
+        </a>
+      {{@ else /}}
+        <img src="{{ blinky.img }}" />
+      {{@ /if }}
+    </li>
+  {{@ /for }}
 </ul>
     `.trim(),
     { blinkies: [
@@ -19,4 +25,6 @@ const _testPages: [ string, Record<string, any> ][] = [
 ];
 
 //@ts-ignore
-_testPages.forEach(i => console.dir(TBrush.compose(i[0]).apply({})[1].children));
+_testPages.forEach(i => console.dir(
+  TBrush.compose(i[0]).apply({}),
+{ depth: null }));

@@ -8,13 +8,13 @@ export class StatementNode implements BaseNode<NodeType.Statement> {
   type = NodeType.Statement as const;
   parent: StatementNode | null;
   keyword: string;
-  parameters: string;
+  parameters: string | null;
   children: NodeArray | null;
 
   constructor (props: {
     parent: StatementNode | null;
     keyword: string;
-    parameters: string;
+    parameters: string | null;
     children: TokenList | null;
   }) {
     this.parent = props.parent;
