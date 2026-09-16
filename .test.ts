@@ -21,6 +21,15 @@ const _testPages: [ string, Record<string, any> ][] = [
       { href: "https://blinky.com/1", img: "/res/blinky/1.png" },
       { href: "https://blinky.com/2", img: "/res/blinky/2.png" }
     ]}
+  ],
+
+  [
+    `
+{{@test}}
+  {{@ void /}}
+{{@/fart}}    
+    `.trim(),
+    {}
   ]
 ];
 

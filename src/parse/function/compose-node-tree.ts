@@ -40,8 +40,6 @@ export function composeNodeTree(list: TokenList, parent?: StatementNode): NodeAr
         
         while (list[index].type !== TokenType.StatementEnd || scope !== 0) {
           const child = list[index];
-
-          console.debug(scope, child);
           
           if (child.type === TokenType.StatementStart)
             scope++;
