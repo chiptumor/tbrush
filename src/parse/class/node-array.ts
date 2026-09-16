@@ -1,24 +1,39 @@
 import { NodeType } from "../enum/node-type.ts";
 import type { StatementNode } from "./statement-node.ts";
 import type { AnyNode } from "../type/any-node.ts";
+import type { Variables } from "../../main/type/variables.ts";
 
 export class NodeArray extends Array<AnyNode> {
-  getChildStatement(keyword?: string): StatementNode {
-    return this.find(i =>
-      i.type === NodeType.Statement
-      && keyword
-        ? i.keyword === keyword
-        : true
-    ) as StatementNode;
+  #variables: Variables[] = [];
+
+  static fromArray(nodes: AnyNode[]): NodeArray {
+    return new this(...nodes);
   }
 
-  getChildStatements(keyword?: string): StatementNode[] {
-    return this.filter(i =>
-      i.type === NodeType.Statement
-      && keyword
-        ? i.keyword === keyword
-        : true
-    ) as StatementNode[];
+  getFirstChildStatement(...keywords: string[]): StatementNode {
+    return this.find(i => {
+      if (i.type !== NodeType.Statement)
+        return false;
+
+      for (const keyword of keywords)
+        if (i.keyword === keyword)
+          return true;
+
+      return false;
+    }) as StatementNode;
+  }
+
+  getChildStatements(...keywords: string[]): StatementNode[] {
+    return this.filter(i => {
+      if (i.type !== NodeType.Statement)
+        return false;
+
+      for (const keyword of keywords)
+        if (i.keyword === keyword)
+          return true;
+
+      return false;
+    }) as StatementNode[];
   }
 
   override toString(): string {

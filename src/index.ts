@@ -1,1 +1,1 @@
-export * from "./main/index.ts";
+export { compose } from "./main/function/compose.ts";
