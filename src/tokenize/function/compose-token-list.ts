@@ -7,22 +7,16 @@ const STATEMENT_REGEX = /^@(.+)/;
 
 // group 1 (\w+): keyword
 // group 2 (.*?): parameters
-const STATEMENT_START_REGEX = /^(\w+)\s(?:\((.*?)\))?$/;
+const STATEMENT_START_REGEX = /^(\w+)\s*(?:\((.*?)\))?$/;
 // group 1 (\w+): keyword
 const STATEMENT_END_REGEX = /^\/(\w+)/;
+// group 1 (\w+): keyword
+// group 2 (.*?): parameters
+const STATEMENT_VOID_REGEX = /^(\w+)\s*(?:\((.*?)\))?\s*\/$/
 
-
-export function composeTokenList(
-  page: string,
-  syntax?: {
-    tbrush?: RegExp;
-    statement?: RegExp;
-    statementStart?: RegExp;
-    statementEnd?: RegExp;
-  }
-): TokenList {
+export function composeTokenList(page: string): TokenList {
   const templates = page
-    .split(syntax?.tbrush ?? TBRUSH_REGEX);
+    .split(TBRUSH_REGEX);
   
   const tokenList: TokenList = [];
 
@@ -33,7 +27,7 @@ export function composeTokenList(
     });
 
     const statement = templates[index]
-      .match(syntax?.statement ?? STATEMENT_REGEX)
+      .match(STATEMENT_REGEX)
       ?.[1].trim();
     if (!statement) {
       tokenList.push({
@@ -44,8 +38,20 @@ export function composeTokenList(
       continue;
     }
 
+    const statementVoid = statement
+      .match(STATEMENT_VOID_REGEX);
+    if (statementVoid) {
+      tokenList.push({
+        type: TokenType.StatementVoid,
+        keyword: statementVoid[1],
+        parameters: statementVoid[2]
+      });
+
+      continue;
+    }
+
     const statementEnd = statement
-      .match(syntax?.statementEnd ?? STATEMENT_END_REGEX);
+      .match(STATEMENT_END_REGEX);
     if (statementEnd) {
       tokenList.push({
         type: TokenType.StatementEnd,
@@ -56,7 +62,7 @@ export function composeTokenList(
     }
 
     const statementStart = statement
-      .match(syntax?.statementStart ?? STATEMENT_START_REGEX);
+      .match(STATEMENT_START_REGEX);
     if (!statementStart) {
       throw Error("Invalid statement TBrush!");
     }

@@ -7,13 +7,13 @@ export class StatementNode implements BaseNode<NodeType.Statement> {
   parent: StatementNode | null;
   keyword: string;
   parameters: string;
-  children: NodeArray;
+  children: NodeArray | null;
 
   constructor (props: {
     parent: StatementNode | null;
     keyword: string;
     parameters: string;
-    children: NodeArray;
+    children: NodeArray | null;
   }) {
     this.parent = props.parent;
     this.keyword = props.keyword;

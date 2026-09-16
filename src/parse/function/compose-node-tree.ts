@@ -2,9 +2,7 @@ import { ExpressionNode } from "../class/expression-node.ts";
 import { NodeArray } from "../class/node-array.ts";
 import { StatementNode } from "../class/statement-node.ts";
 import { TemplateNode } from "../class/template-node.ts";
-import { NodeType } from "../enum/node-type.ts";
 import { TokenType } from "../../tokenize/enum/token-type.ts";
-import type { RootNode } from "../type/root-node.ts";
 import type { TokenList } from "../../tokenize/type/token-list.ts";
 
 export function composeNodeTree(list: TokenList, parent?: StatementNode): NodeArray {
@@ -24,6 +22,14 @@ export function composeNodeTree(list: TokenList, parent?: StatementNode): NodeAr
         tree.push(new ExpressionNode({
           parent: parent ?? null,
           content: token.content
+        }));
+        break;
+      case TokenType.StatementVoid:
+        tree.push(new StatementNode({
+          parent: parent ?? null,
+          keyword: token.keyword,
+          parameters: token.parameters,
+          children: null
         }));
         break;
       case TokenType.StatementStart:
