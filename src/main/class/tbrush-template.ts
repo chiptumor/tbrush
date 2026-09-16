@@ -34,6 +34,6 @@ export class TBrushTemplate {
   }
 
   apply(template: TemplateObject) {
-
+    return this.#tree;
   }
 }

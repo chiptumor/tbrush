@@ -63,7 +63,7 @@ export function composeNodeTree(list: TokenList, parent?: StatementNode): NodeAr
           parent: parent ?? null,
           keyword: token.keyword,
           parameters: token.parameters,
-          children: composeNodeTree(children)
+          children: children
         }));
 
         break;

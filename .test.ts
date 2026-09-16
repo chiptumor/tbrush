@@ -18,4 +18,5 @@ const _testPages: [ string, Record<string, any> ][] = [
   ]
 ];
 
-_testPages.forEach(i => console.log(TBrush.compose(i[0])));
+//@ts-ignore
+_testPages.forEach(i => console.dir(TBrush.compose(i[0]).apply({})[1].children));
