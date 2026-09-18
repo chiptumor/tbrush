@@ -1,11 +1,13 @@
+import { parseExpression } from "../function/parse-expression.ts";
+import { NodeArray } from "../../parse/class/node-array.ts";
 import type { StatementFunctionSet } from "../type/statement-function-set.ts";
 
 export const CORE_STATEMENTS: StatementFunctionSet = {
-  if(statement, helper) {
+  if(statement) {
     if (!statement.children) return [];
     if (statement.parameters === null) return statement.children;
 
-    const condition = helper.parseExpression(statement.parameters);
+    const condition = parseExpression(statement.parameters);
 
     const elseStatement = statement.children.getFirstChildStatement("else");
     if (elseStatement) {
@@ -26,20 +28,49 @@ export const CORE_STATEMENTS: StatementFunctionSet = {
     }
   },
 
-  for(statement, helper) {
+  for(statement) {
     if (!statement.children) return [];
     if (!statement.parameters) return statement.children;
-
-    const parameters = statement.parameters.match(/^(\S+?)\s+(in|of)\s+(.+)$/);
+    
+    const REGEX = /^(\S+?)\s+(in|of)\s+(.+)$/;
+    const parameters = statement.parameters.match(REGEX);
 
     if (!parameters) return [];
+    
+    const variableName = parameters[1];
+    const keyword = parameters[2];
+    const iterable = parseExpression(parameters[3]);
 
-    const [ _, variableName, keyword, iterable ] = parameters;
+    const children = statement.children;
+    const variables = statement.children.parameters;
+    const nodes: NodeArray[] = [];
+    
+    switch (keyword) {
+      case "in":
+        for (const item in iterable)
+          iterate(item);
+        break;
+      
+      case "of":
+        for (const item of iterable)
+          iterate(item);
+        break;
+    }
 
-    return "";
+    return nodes;
+    
+    function iterate(value) {
+      const node = NodeArray.fromArray(children);
+      node.variables = variables;
+      node.variables.push({
+        [variableName]: value
+      });
+      
+      nodes.push(node);
+    }
   },
 
-  with(statement, helper) {
+  with(statement) {
     return "";
   }
 };

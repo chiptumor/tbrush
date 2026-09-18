@@ -4,7 +4,7 @@ import type { AnyNode } from "../type/any-node.ts";
 import type { Variables } from "../../main/type/variables.ts";
 
 export class NodeArray extends Array<AnyNode> {
-  #variables: Variables[] = [];
+  variables: Variables[] = [];
 
   static fromArray(nodes: AnyNode[]): NodeArray {
     return new this(...nodes);
