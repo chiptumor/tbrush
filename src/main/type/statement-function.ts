@@ -1,6 +1,12 @@
-import type { StatementNode } from "../../parse/class/statement-node.ts";
-import type { NodeArray } from "../../parse/class/node-array.ts";
+import type { Variables } from "./variables.ts";
+import type { Statement } from "../../parse/class/statement.ts";
+import type { Scope } from "../../parse/class/scope.ts";
 import type { AnyNode } from "../../parse/type/any-node.ts";
 
+type AnyItem = string | AnyNode | Scope;
+
 export type StatementFunction =
-  (context: StatementNode) => string | NodeArray | NodeArray[] | AnyNode[];
+  (context: Statement, variables: Variables)
+    =>
+      | string | AnyNode | Scope
+      | (string | AnyNode | Scope)[];

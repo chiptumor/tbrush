@@ -1,20 +1,55 @@
 import { parseExpression } from "../function/parse-expression.ts";
-import { NodeArray } from "../../parse/class/node-array.ts";
+import { Scope } from "../../parse/class/scope.ts";
 import type { StatementFunctionSet } from "../type/statement-function-set.ts";
 
 export const CORE_STATEMENTS: StatementFunctionSet = {
-  if(statement) {
-    if (!statement.children) return [];
-    if (statement.parameters === null) return statement.children;
+  // TODO: implement `raw`
 
-    const condition = parseExpression(statement.parameters);
+  escape({ children }) {
+    const escapes: Record<string, string> = {
+      "<": "lt",
+      ">": "gt",
+      "&": "amp",
+      '"': "quot",
+      "'": "apos"
+    };
 
-    const elseStatement = statement.children.getFirstChildStatement("else");
+    let string = String(children);
+
+    for (const char in escapes)
+      string = string.replaceAll(char, escapes[char]);
+    
+    return string;
+  },
+
+  with({ children, parameters }, variables) {
+
+    if (!children) return [];
+    if (parameters === null) return children;
+
+    const bindings = parseExpression(parameters, variables);
+    
+    children.variables = {
+      ...variables,
+      ...bindings
+    };
+
+    return children;
+  },
+
+  if({ children, parameters }, variables) {
+
+    if (!children) return [];
+    if (parameters === null) return children;
+
+    const condition = parseExpression(parameters, variables);
+
+    const elseStatement = children.getFirstChildStatement("else");
     if (elseStatement) {
-      const elseIndex = statement.children.indexOf(elseStatement);
+      const elseIndex = children.indexOf(elseStatement);
 
-      const trueBody = statement.children.slice(0, elseIndex);
-      const falseBody = statement.children.slice(elseIndex + 1);
+      const trueBody = children.slice(0, elseIndex);
+      const falseBody = children.slice(elseIndex + 1);
       
       if (condition)
         return trueBody;
@@ -22,28 +57,26 @@ export const CORE_STATEMENTS: StatementFunctionSet = {
         return falseBody;
     } else {
       if (condition)
-        return statement.children;
+        return children;
       else
         return [];
     }
   },
 
-  for(statement) {
-    if (!statement.children) return [];
-    if (!statement.parameters) return statement.children;
-    
-    const REGEX = /^(\S+?)\s+(in|of)\s+(.+)$/;
-    const parameters = statement.parameters.match(REGEX);
+  for({ children, parameters }, variables) {
 
-    if (!parameters) return [];
+    if (!children) return [];
+    if (parameters === null) return children;
     
-    const variableName = parameters[1];
-    const keyword = parameters[2];
-    const iterable = parseExpression(parameters[3]);
+    const regex = /^(\S+?)\s+(in|of)\s+(.+)$/;
+    const match = parameters.match(regex);
 
-    const children = statement.children;
-    const variables = statement.children.parameters;
-    const nodes: NodeArray[] = [];
+    if (!match) return [];
+    
+    const [, variableName, keyword ] = match;
+    const iterable = parseExpression(match[3], variables);
+
+    const nodes: Scope[] = [];
     
     switch (keyword) {
       case "in":
@@ -59,18 +92,14 @@ export const CORE_STATEMENTS: StatementFunctionSet = {
 
     return nodes;
     
-    function iterate(value) {
-      const node = NodeArray.fromArray(children);
-      node.variables = variables;
-      node.variables.push({
+    function iterate(value: any) {
+      const node = new Scope(...children!);
+      node.variables = {
+        ...variables,
         [variableName]: value
-      });
+      };
       
       nodes.push(node);
     }
-  },
-
-  with(statement) {
-    return "";
   }
 };

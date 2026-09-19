@@ -1,33 +1,36 @@
-import { ExpressionNode } from "../class/expression-node.ts";
-import { NodeArray } from "../class/node-array.ts";
-import { StatementNode } from "../class/statement-node.ts";
-import { TemplateNode } from "../class/template-node.ts";
+import { Expression } from "../class/expression.ts";
+import { Scope } from "../class/scope.ts";
+import { Statement } from "../class/statement.ts";
+import { Template } from "../class/template.ts";
 import { TokenType } from "../../tokenize/enum/token-type.ts";
-import type{ StatementEndToken } from "../../tokenize/interface/statement-end-token.ts";
+import type { StatementEndToken } from "../../tokenize/interface/statement-end-token.ts";
 import type { TokenList } from "../../tokenize/type/token-list.ts";
 
-export function composeNodeTree(list: TokenList, parent?: StatementNode): NodeArray {
-  const tree = new NodeArray();
+export function composeNodeTree(
+  list: TokenList,
+  parent: Statement | null = null
+): Scope {
+  const tree = new Scope();
 
   for (let index = 0; index < list.length; index++) {
     const token = list[index];
 
     switch (token.type) {
       case TokenType.Template:
-        tree.push(new TemplateNode({
-          parent: parent ?? null,
+        tree.push(new Template({
+          parent: parent,
           content: token.content
         }));
         break;
       case TokenType.Expression:
-        tree.push(new ExpressionNode({
-          parent: parent ?? null,
+        tree.push(new Expression({
+          parent: parent,
           content: token.content
         }));
         break;
       case TokenType.StatementVoid:
-        tree.push(new StatementNode({
-          parent: parent ?? null,
+        tree.push(new Statement({
+          parent: parent,
           keyword: token.keyword,
           parameters: token.parameters,
           children: null
@@ -58,8 +61,8 @@ export function composeNodeTree(list: TokenList, parent?: StatementNode): NodeAr
         if (token.keyword !== (list[index] as StatementEndToken).keyword)
           throw new Error("Syntax error: mismatched statement end node");
 
-        tree.push(new StatementNode({
-          parent: parent ?? null,
+        tree.push(new Statement({
+          parent: parent,
           keyword: token.keyword,
           parameters: token.parameters,
           children: children

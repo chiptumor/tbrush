@@ -1,18 +1,17 @@
-import { NodeType } from "../enum/node-type.ts";
-import type { StatementNode } from "./statement-node.ts";
+import { Statement } from "./statement.ts";
 import type { AnyNode } from "../type/any-node.ts";
 import type { Variables } from "../../main/type/variables.ts";
 
-export class NodeArray extends Array<AnyNode> {
-  variables: Variables[] = [];
+export class Scope extends Array<AnyNode> {
+  variables: Variables = {};
 
-  static fromArray(nodes: AnyNode[]): NodeArray {
+  static fromIterable(nodes: AnyNode[]): Scope {
     return new this(...nodes);
   }
 
-  getFirstChildStatement(...keywords: string[]): StatementNode {
+  getFirstChildStatement(...keywords: string[]): Statement {
     return this.find(i => {
-      if (i.type !== NodeType.Statement)
+      if (!(i instanceof Statement))
         return false;
 
       for (const keyword of keywords)
@@ -20,12 +19,12 @@ export class NodeArray extends Array<AnyNode> {
           return true;
 
       return false;
-    }) as StatementNode;
+    }) as Statement;
   }
 
-  getChildStatements(...keywords: string[]): StatementNode[] {
+  getChildStatements(...keywords: string[]): Statement[] {
     return this.filter(i => {
-      if (i.type !== NodeType.Statement)
+      if (!(i instanceof Statement))
         return false;
 
       for (const keyword of keywords)
@@ -33,7 +32,7 @@ export class NodeArray extends Array<AnyNode> {
           return true;
 
       return false;
-    }) as StatementNode[];
+    }) as Statement[];
   }
 
   override toString(): string {

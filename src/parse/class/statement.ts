@@ -1,18 +1,16 @@
-import { NodeArray } from "./node-array.ts";
-import { NodeType } from "../enum/node-type.ts";
+import { Scope } from "./scope.ts";
 import { composeNodeTree } from "../function/compose-node-tree.ts";
 import type { BaseNode } from "../interface/base-node.ts";
 import type { TokenList } from "../../tokenize/type/token-list.ts";
 
-export class StatementNode implements BaseNode<NodeType.Statement> {
-  type = NodeType.Statement as const;
-  parent: StatementNode | null;
+export class Statement implements BaseNode {
+  parent: Statement | null;
   keyword: string;
   parameters: string | null;
-  children: NodeArray | null;
+  children: Scope | null;
 
   constructor (props: {
-    parent: StatementNode | null;
+    parent: Statement | null;
     keyword: string;
     parameters: string | null;
     children: TokenList | null;

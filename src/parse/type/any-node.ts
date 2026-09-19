@@ -1,5 +1,6 @@
-import type { ExpressionNode } from "../class/expression-node.ts";
-import type { StatementNode } from "../class/statement-node.ts";
-import type { TemplateNode } from "../class/template-node.ts";
+import type { Expression } from "../class/expression.ts";
+import type { Scope } from "../class/scope.ts";
+import type { Statement } from "../class/statement.ts";
+import type { Template } from "../class/template.ts";
 
-export type AnyNode = TemplateNode | ExpressionNode | StatementNode;
+export type AnyNode = Scope | Template | Expression | Statement;

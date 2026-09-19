@@ -3,7 +3,7 @@ import type { Variables } from "../type/variables.ts";
 
 export function parseExpression(
   expression: string,
-  variables: Variables
+  variables: Variables = {}
 ): any {
   const string = `return (${expression});`;
   const script = getTrustedScript(string);
