@@ -2,12 +2,16 @@ import * as TBrush from "../../index.ts";
 
 export const CORE_STATEMENTS: TBrush.StatementFunctionSet = {
   raw({ children }) {
+    if (!children) return [];
+
     const string = String(children);
     const template = new TBrush.Template(string);
     return template;
   },
 
-  escape({ children }) {
+  escape({ children }, variables) {
+    if (!children) return [];
+
     const escapes: Record<string, string> = {
       "<": "lt",
       ">": "gt",
@@ -16,18 +20,15 @@ export const CORE_STATEMENTS: TBrush.StatementFunctionSet = {
       "'": "apos"
     };
 
-    let string = String(children);
+    const regex = new RegExp(Object.keys(escapes).join("|"), "g");
+    const resolved = String(children.resolve(variables));
+    
+    const string = resolved.replace(regex, i => "&" + escapes[i] + ";");
 
-    // TODO: resolve before replacing
-
-    for (const char in escapes)
-      string = string.replaceAll(char, escapes[char]);
-
-    return new TBrush.Scope();
+    return new TBrush.Template(string);
   },
 
   with({ children, parameters }, variables) {
-
     if (!children) return [];
     if (parameters === null) return children;
 

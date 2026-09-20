@@ -1,4 +1,5 @@
 import { Statement } from "./statement.ts";
+import { Template } from "./template.ts";
 import { composeNodeTree } from "../function/compose-node-tree.ts";
 import { composeTokenList } from "../../tokenize/function/compose-token-list.ts";
 import type { AnyNode } from "../type/any-node.ts";
@@ -41,6 +42,10 @@ export class Scope extends Array<AnyNode> {
 
       return false;
     }) as Statement[];
+  }
+
+  resolve(variables: Variables): Template {
+    // TODO
   }
 
   override toString(): string {

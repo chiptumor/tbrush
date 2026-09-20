@@ -33,7 +33,7 @@ export class TBrushTemplate {
     this.#tree = composeNodeTree(list);
   }
 
-  apply(template: TemplateObject) {
-    return this.#tree;
+  apply(template: TemplateObject): string {
+    // TODO
   }
 }
