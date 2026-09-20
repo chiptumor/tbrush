@@ -23,21 +23,32 @@ export function composeNodeTree(
         break;
       case TokenType.Expression:
         const expression = new Expression(token.content);
+        expression.originalText = "{{" + token.content + "}}";
         parent && (expression.parent = parent);
         tree.push(expression);
         break;
       case TokenType.StatementVoid:
-        const statementVoid = new Statement(token.keyword, token.parameters, null);
+        const statementVoid =
+          new Statement(token.keyword, token.parameters, null);
+        statementVoid.originalText = token.originalText;
         parent && (statementVoid.parent = parent);
         tree.push(statementVoid);
         break;
       case TokenType.StatementStart:
         const children: TokenList = [];
+        let originalText = token.originalText;
         index++;
         let scope = 0;
         
         while (list[index].type !== TokenType.StatementEnd || scope !== 0) {
           const child = list[index];
+
+          if (child.type === TokenType.Template)
+            originalText += child.content;
+          else if (child.type === TokenType.Expression)
+            originalText += "{{" + child.content + "}}";
+          else
+            originalText += child.originalText;
           
           if (child.type === TokenType.StatementStart)
             scope++;
@@ -52,11 +63,19 @@ export function composeNodeTree(
             throw new Error("Syntax error: missing statement end node");
         }
 
-        if (token.keyword !== (list[index] as StatementEndToken).keyword)
+        const statementEnd = list[index] as StatementEndToken;
+
+        if (token.keyword !== statementEnd.keyword)
           throw new Error("Syntax error: mismatched statement end node");
 
-        const statement =
-          new Statement(token.keyword, token.parameters, composeNodeTree(children));
+        originalText += statementEnd.originalText;
+
+        const statement = new Statement(
+          token.keyword,
+          token.parameters,
+          composeNodeTree(children)
+        );
+        statement.originalText = originalText;
         parent && (statement.parent = parent);
         tree.push(statement);
         break;

@@ -1,9 +1,11 @@
-import { parseExpression } from "../function/parse-expression.ts";
-import { Scope } from "../../parse/class/scope.ts";
-import type { StatementFunctionSet } from "../type/statement-function-set.ts";
+import * as TBrush from "../../index.ts";
 
-export const CORE_STATEMENTS: StatementFunctionSet = {
-  // TODO: implement `raw`
+export const CORE_STATEMENTS: TBrush.StatementFunctionSet = {
+  raw({ children }) {
+    const string = String(children);
+    const template = new TBrush.Template(string);
+    return template;
+  },
 
   escape({ children }) {
     const escapes: Record<string, string> = {
@@ -16,10 +18,12 @@ export const CORE_STATEMENTS: StatementFunctionSet = {
 
     let string = String(children);
 
+    // TODO: resolve before replacing
+
     for (const char in escapes)
       string = string.replaceAll(char, escapes[char]);
-    
-    return string;
+
+    return new TBrush.Scope();
   },
 
   with({ children, parameters }, variables) {
@@ -27,7 +31,7 @@ export const CORE_STATEMENTS: StatementFunctionSet = {
     if (!children) return [];
     if (parameters === null) return children;
 
-    const bindings = parseExpression(parameters, variables);
+    const bindings = TBrush.parseExpression(parameters, variables);
     
     children.variables = {
       ...variables,
@@ -42,7 +46,7 @@ export const CORE_STATEMENTS: StatementFunctionSet = {
     if (!children) return [];
     if (parameters === null) return children;
 
-    const condition = parseExpression(parameters, variables);
+    const condition = TBrush.parseExpression(parameters, variables);
 
     const elseStatement = children.getFirstChildStatement("else");
     if (elseStatement) {
@@ -74,9 +78,9 @@ export const CORE_STATEMENTS: StatementFunctionSet = {
     if (!match) return [];
     
     const [, variableName, keyword ] = match;
-    const iterable = parseExpression(match[3], variables);
+    const iterable = TBrush.parseExpression(match[3], variables);
 
-    const nodes: Scope[] = [];
+    const nodes: TBrush.Scope[] = [];
     
     switch (keyword) {
       case "in":
@@ -93,7 +97,7 @@ export const CORE_STATEMENTS: StatementFunctionSet = {
     return nodes;
     
     function iterate(value: any) {
-      const node = new Scope(...children!);
+      const node = new TBrush.Scope(...children!);
       node.variables = {
         ...variables,
         [variableName]: value

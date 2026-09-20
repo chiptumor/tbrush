@@ -26,10 +26,9 @@ export function composeTokenList(page: string): TokenList {
       content: templates[index - 1]
     });
 
-    const statement = templates[index]
-      .match(STATEMENT_REGEX)
-      ?.[1].trim();
-    if (!statement) {
+    const match = templates[index].match(STATEMENT_REGEX)?.[1];
+
+    if (!match) {
       tokenList.push({
         type: TokenType.Expression,
         content: templates[index]
@@ -38,13 +37,17 @@ export function composeTokenList(page: string): TokenList {
       continue;
     }
 
+    const originalText = "{{@" + match + "}}";
+    const statement = match.trim();
+
     const statementVoid = statement
       .match(STATEMENT_VOID_REGEX);
     if (statementVoid) {
       tokenList.push({
         type: TokenType.StatementVoid,
         keyword: statementVoid[1],
-        parameters: statementVoid[2] ?? null
+        parameters: statementVoid[2] ?? null,
+        originalText: originalText
       });
 
       continue;
@@ -55,7 +58,8 @@ export function composeTokenList(page: string): TokenList {
     if (statementEnd) {
       tokenList.push({
         type: TokenType.StatementEnd,
-        keyword: statementEnd[1]
+        keyword: statementEnd[1],
+        originalText: originalText
       });
 
       continue;
@@ -70,7 +74,8 @@ export function composeTokenList(page: string): TokenList {
     tokenList.push({
       type: TokenType.StatementStart,
       keyword: statementStart[1],
-      parameters: statementStart[2] ?? null
+      parameters: statementStart[2] ?? null,
+      originalText: originalText
     });
   }
 

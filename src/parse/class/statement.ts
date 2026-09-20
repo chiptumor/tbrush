@@ -5,6 +5,7 @@ export class Statement extends BaseNode {
   keyword: string;
   parameters: string | null;
   children: Scope | null;
+  originalText: string = "";
 
   constructor (keyword: string, parameters: string | null, children: Scope | null) {
     super()
