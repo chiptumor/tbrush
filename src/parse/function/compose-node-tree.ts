@@ -17,24 +17,19 @@ export function composeNodeTree(
 
     switch (token.type) {
       case TokenType.Template:
-        tree.push(new Template({
-          parent: parent,
-          content: token.content
-        }));
+        const template = new Template(token.content);
+        parent && (template.parent = parent);
+        tree.push(template);
         break;
       case TokenType.Expression:
-        tree.push(new Expression({
-          parent: parent,
-          content: token.content
-        }));
+        const expression = new Expression(token.content);
+        parent && (expression.parent = parent);
+        tree.push(expression);
         break;
       case TokenType.StatementVoid:
-        tree.push(new Statement({
-          parent: parent,
-          keyword: token.keyword,
-          parameters: token.parameters,
-          children: null
-        }));
+        const statementVoid = new Statement(token.keyword, token.parameters, null);
+        parent && (statementVoid.parent = parent);
+        tree.push(statementVoid);
         break;
       case TokenType.StatementStart:
         const children: TokenList = [];
@@ -46,9 +41,8 @@ export function composeNodeTree(
           
           if (child.type === TokenType.StatementStart)
             scope++;
-          else if (child.type === TokenType.StatementEnd) {
+          else if (child.type === TokenType.StatementEnd)
             scope--;
-          }
 
           children.push(child);
 
@@ -61,13 +55,10 @@ export function composeNodeTree(
         if (token.keyword !== (list[index] as StatementEndToken).keyword)
           throw new Error("Syntax error: mismatched statement end node");
 
-        tree.push(new Statement({
-          parent: parent,
-          keyword: token.keyword,
-          parameters: token.parameters,
-          children: children
-        }));
-
+        const statement =
+          new Statement(token.keyword, token.parameters, composeNodeTree(children));
+        parent && (statement.parent = parent);
+        tree.push(statement);
         break;
     }
   }

@@ -27,7 +27,7 @@ const _testPages: [ string, Record<string, any> ][] = [
     `
 {{@test}}
   {{@ void /}}
-{{@/fart}}    
+{{@/test}}    
     `.trim(),
     {}
   ]
