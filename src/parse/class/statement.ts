@@ -1,7 +1,5 @@
 import { Scope } from "./scope.ts";
-import { composeNodeTree } from "../function/compose-node-tree.ts";
 import { BaseNode } from "./base-node.ts";
-import type { TokenList } from "../../tokenize/type/token-list.ts";
 
 export class Statement extends BaseNode {
   keyword: string;
