@@ -1,0 +1,1 @@
+{"version":3,"file":"statement-end-token.d.ts","sourceRoot":"","sources":["../../../src/tokenize/interface/statement-end-token.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,KAAK,EAAE,MAAM,YAAY,CAAC;AACxC,OAAO,KAAK,EAAE,SAAS,EAAE,MAAM,uBAAuB,CAAC;AAEvD,MAAM,WAAW,iBAAkB,SAAQ,KAAK,CAAC,SAAS,CAAC,YAAY,CAAC;IACtE,OAAO,EAAE,MAAM,CAAC;IAChB,YAAY,EAAE,MAAM,CAAC;CACtB"}

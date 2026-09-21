@@ -9,7 +9,7 @@ export class Expression extends BaseNode {
     this.content = content;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.originalText;
   }
 }

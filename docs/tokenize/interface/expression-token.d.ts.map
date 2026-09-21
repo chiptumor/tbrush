@@ -1,0 +1,1 @@
+{"version":3,"file":"expression-token.d.ts","sourceRoot":"","sources":["../../../src/tokenize/interface/expression-token.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,KAAK,EAAE,MAAM,YAAY,CAAC;AACxC,OAAO,KAAK,EAAE,SAAS,EAAE,MAAM,uBAAuB,CAAC;AAEvD,MAAM,WAAW,eAAgB,SAAQ,KAAK,CAAC,SAAS,CAAC,UAAU,CAAC;IAClE,OAAO,EAAE,MAAM,CAAC;CACjB"}

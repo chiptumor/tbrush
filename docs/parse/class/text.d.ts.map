@@ -1,0 +1,1 @@
+{"version":3,"file":"text.d.ts","sourceRoot":"","sources":["../../../src/parse/class/text.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,gBAAgB,CAAC;AAE1C,qBAAa,IAAK,SAAQ,QAAQ;IAChC,OAAO,EAAE,MAAM,CAAC;IAEhB,YAAa,OAAO,EAAE,MAAM,EAG3B;IAEQ,QAAQ,IAAI,MAAM,CAE1B;CACF"}

@@ -8,7 +8,7 @@ export class Text extends BaseNode {
     this.content = content;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.content;
   }
 }

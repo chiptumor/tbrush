@@ -14,7 +14,7 @@ export class Statement extends BaseNode {
     this.children = children;
   }
 
-  toString(): string {
+  override toString(): string {
     return `{{@${ this.keyword }(${ this.parameters })}}${
       this.children
     }{{@/${ this.keyword }}}`;

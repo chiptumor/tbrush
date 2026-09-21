@@ -1,0 +1,1 @@
+{"version":3,"file":"expression.d.ts","sourceRoot":"","sources":["../../../src/parse/class/expression.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,gBAAgB,CAAC;AAE1C,qBAAa,UAAW,SAAQ,QAAQ;IACtC,OAAO,EAAE,MAAM,CAAC;IAChB,YAAY,EAAE,MAAM,CAAM;IAE1B,YAAa,OAAO,EAAE,MAAM,EAG3B;IAEQ,QAAQ,IAAI,MAAM,CAE1B;CACF"}

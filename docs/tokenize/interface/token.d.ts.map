@@ -1,0 +1,1 @@
+{"version":3,"file":"token.d.ts","sourceRoot":"","sources":["../../../src/tokenize/interface/token.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,SAAS,EAAE,MAAM,uBAAuB,CAAC;AAEvD,MAAM,WAAW,KAAK,CAAC,CAAC,SAAS,SAAS;IACxC,IAAI,EAAE,CAAC,CAAC;CACT"}

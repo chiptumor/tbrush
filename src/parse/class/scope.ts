@@ -50,7 +50,7 @@ export class Scope extends Array<CoreNode> {
     return new Text(string);
   }
 
-  toString(): string {
+  override toString(): string {
     return this.join("");
   }
 }
