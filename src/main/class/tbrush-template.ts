@@ -36,17 +36,23 @@ export class TBrushTemplate {
   
   getStatementCallback(variables: Variables): StatementCallback {
     return (statement, vars) =>
-      this.statementFunctions[statement.keyword](statement, {
+      this.statementFunctions[statement.keyword]?.(statement, {
         ...variables,
         ...vars
-      }, this);
+      }, this)
+        ?? statement.children;
   }
 
   resolveScope(scope: Scope, variables: Variables): string {
+    // supplies own statement config
     return resolve(scope, variables, this.getStatementCallback(variables));
   }
 
   apply(template: TemplateObject): string {
-    return resolve(this.#tree, template, this.getStatementCallback(template));
+    return String(resolve(
+      this.#tree,
+      template,
+      this.getStatementCallback(template)
+    ));
   }
 }

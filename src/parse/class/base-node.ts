@@ -1,13 +1,13 @@
-import { Statement } from "../class/statement.ts";
+import type { Statement } from "./statement.ts";
 
 export class BaseNode {
   #parent: Statement | null = null;
 
   set parent(parent: Statement | null) {
-    if (parent instanceof Statement && !parent.children) return;
+    if (parent && !parent.children) return;
 
     if (this.#parent) {
-      const index = this.#parent.children!.findIndex(i => i === this.#parent);
+      const index = this.#parent.children!.findIndex(i => i === this as any);
       this.#parent.children!.splice(index, 1);
     }
 
@@ -16,7 +16,7 @@ export class BaseNode {
       return;
     }
 
-    parent.children!.push(this);
+    parent.children!.push(this as any);
     this.#parent = parent;
   }
 

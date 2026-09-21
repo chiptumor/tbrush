@@ -1,7 +1,6 @@
 import { Statement } from "./statement.ts";
 import { Template } from "./template.ts";
 import { composeNodeTree } from "../function/compose-node-tree.ts";
-import { resolve } from "../../main/function/resolve.ts";
 import { composeTokenList } from "../../tokenize/function/compose-token-list.ts";
 import type { CoreNode } from "../type/core-node.ts";
 import type { TBrushTemplate } from "../../main/class/tbrush-template.ts";
@@ -51,7 +50,7 @@ export class Scope extends Array<CoreNode> {
     return new Template(string);
   }
 
-  override toString(): string {
+  toString(): string {
     return this.join("");
   }
 }

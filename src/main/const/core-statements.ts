@@ -43,7 +43,6 @@ export const CORE_STATEMENTS: TBrush.StatementFunctionSet = {
   },
 
   if({ children, parameters }, variables) {
-
     if (!children) return [];
     if (parameters === null) return children;
 
@@ -69,7 +68,6 @@ export const CORE_STATEMENTS: TBrush.StatementFunctionSet = {
   },
 
   for({ children, parameters }, variables) {
-
     if (!children) return [];
     if (parameters === null) return children;
     

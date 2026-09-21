@@ -1,5 +1,5 @@
-import { Scope } from "./scope.ts";
 import { BaseNode } from "./base-node.ts";
+import type { Scope } from "./scope.ts";
 
 export class Statement extends BaseNode {
   keyword: string;
