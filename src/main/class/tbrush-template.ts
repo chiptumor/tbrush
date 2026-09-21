@@ -1,4 +1,5 @@
 import { CORE_STATEMENTS } from "../const/core-statements.ts";
+import { resolve } from "../function/resolve.ts";
 import { Scope } from "../../parse/class/scope.ts";
 import { composeNodeTree } from "../../parse/function/compose-node-tree.ts";
 import { composeTokenList } from "../../tokenize/function/compose-token-list.ts";
@@ -34,6 +35,6 @@ export class TBrushTemplate {
   }
 
   apply(template: TemplateObject): string {
-    // TODO
+    return resolve(this.#tree, template);
   }
 }

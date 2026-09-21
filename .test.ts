@@ -1,6 +1,6 @@
 import * as TBrush from "./src/index.ts";
 
-const _testPages: [ string, Record<string, any> ][] = [
+const testPages: [ string, Record<string, any> ][] = [
   [
     `
 <ul>
@@ -34,6 +34,6 @@ const _testPages: [ string, Record<string, any> ][] = [
 ];
 
 //@ts-ignore
-_testPages.forEach(i => console.dir(
-  TBrush.compose(i[0]).apply({}),
+testPages.forEach(i => console.dir(
+  TBrush.compose(i[0]).apply(i[1]),
 { depth: null }));
