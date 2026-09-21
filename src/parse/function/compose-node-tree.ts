@@ -1,7 +1,7 @@
 import { Expression } from "../class/expression.ts";
 import { Scope } from "../class/scope.ts";
 import { Statement } from "../class/statement.ts";
-import { Template } from "../class/template.ts";
+import { Text } from "../class/text.ts";
 import { TokenType } from "../../tokenize/enum/token-type.ts";
 import type { StatementEndToken } from "../../tokenize/interface/statement-end-token.ts";
 import type { TokenList } from "../../tokenize/type/token-list.ts";
@@ -17,7 +17,7 @@ export function composeNodeTree(
 
     switch (token.type) {
       case TokenType.Template:
-        const template = new Template(token.content);
+        const template = new Text(token.content);
         parent && (template.parent = parent);
         tree.push(template);
         break;

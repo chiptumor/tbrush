@@ -2,7 +2,7 @@ import { parseExpression } from "./parse-expression.ts";
 import { Expression } from "../../parse/class/expression.ts";
 import { Scope } from "../../parse/class/scope.ts";
 import { Statement } from "../../parse/class/statement.ts";
-import { Template } from "../../parse/class/template.ts";
+import { Text } from "../../parse/class/text.ts";
 import type { StatementCallback } from "../type/statement-callback.ts";
 import type { Variables } from "../type/variables.ts";
 import type { CoreNode } from "../../parse/type/core-node.ts";
@@ -18,7 +18,7 @@ export function resolve(
     ...scope.variables
   };
   
-  const resolved: (Expression | Template)[] = [];
+  const resolved: (Expression | Text)[] = [];
   
   for (const item of scope) {
     let node: CoreNode = item;
@@ -37,17 +37,17 @@ export function resolve(
         ...variables,
         ...node.variables
       }, statementCallback);
-      node = new Template(string);
+      node = new Text(string);
     }
 
     resolved.push(node);
   }
   
-  const templates: Template[] = [];
+  const templates: Text[] = [];
   
   for (const node of resolved) {
-    const result: Template = node instanceof Expression
-      ? new Template(parseExpression(node.content, variables))
+    const result: Text = node instanceof Expression
+      ? new Text(parseExpression(node.content, variables))
       : node;
     
     templates.push(result);

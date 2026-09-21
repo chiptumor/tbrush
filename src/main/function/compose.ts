@@ -1,5 +1,5 @@
-import { TBrushTemplate } from "../class/tbrush-template.ts";
+import { Template } from "../class/template.ts";
 
-export function compose(...args: ConstructorParameters<typeof TBrushTemplate>) {
-  return new TBrushTemplate(...args);
+export function compose(...args: ConstructorParameters<typeof Template>) {
+  return new Template(...args);
 }

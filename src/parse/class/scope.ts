@@ -1,9 +1,9 @@
 import { Statement } from "./statement.ts";
-import { Template } from "./template.ts";
+import { Text } from "./text.ts";
 import { composeNodeTree } from "../function/compose-node-tree.ts";
 import { composeTokenList } from "../../tokenize/function/compose-token-list.ts";
 import type { CoreNode } from "../type/core-node.ts";
-import type { TBrushTemplate } from "../../main/class/tbrush-template.ts";
+import type { Template } from "../../main/class/template.ts";
 import type { Variables } from "../../main/type/variables.ts";
 
 export class Scope extends Array<CoreNode> {
@@ -45,9 +45,9 @@ export class Scope extends Array<CoreNode> {
     }) as Statement[];
   }
 
-  resolve(tbrushTemplate: TBrushTemplate, variables: Variables = {}): Template {
+  resolve(tbrushTemplate: Template, variables: Variables = {}): Text {
     const string = tbrushTemplate.resolveScope(this, variables);
-    return new Template(string);
+    return new Text(string);
   }
 
   toString(): string {

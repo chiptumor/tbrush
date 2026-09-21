@@ -1,7 +1,6 @@
-import type { Statement } from "./statement.ts";
 import { BaseNode } from "./base-node.ts";
 
-export class Template extends BaseNode {
+export class Text extends BaseNode {
   content: string;
 
   constructor (content: string) {

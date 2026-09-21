@@ -9,7 +9,7 @@ import type { StatementFunctionSet } from "../type/statement-function-set.ts";
 import type { TemplateObject } from "../type/template-object.ts";
 import type { Variables } from "../type/variables.ts";
 
-export class TBrushTemplate {
+export class Template {
   #tree: Scope;
   
   #config: TBrushConfig | undefined;
