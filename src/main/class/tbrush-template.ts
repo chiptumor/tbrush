@@ -35,12 +35,18 @@ export class TBrushTemplate {
   }
   
   getStatementCallback(variables: Variables): StatementCallback {
-    return (statement, vars) =>
-      this.statementFunctions[statement.keyword]?.(statement, {
+    return (statement, vars) => {
+      const func = this.statementFunctions[statement.keyword]
+
+      if (!func) throw new Error(
+        "statement not found (" + statement.keyword + ")"
+      );
+
+      return func(statement, {
         ...variables,
         ...vars
       }, this)
-        ?? statement.children;
+    }
   }
 
   resolveScope(scope: Scope, variables: Variables): string {
