@@ -4,27 +4,18 @@ import { Scope } from "../../parse/class/scope.ts";
 import { composeNodeTree } from "../../parse/function/compose-node-tree.ts";
 import { composeTokenList } from "../../tokenize/function/compose-token-list.ts";
 import type { TBrushConfig } from "../interface/tbrush-config.ts";
+import type { StatementCallback } from "../type/statement-callback.ts";
 import type { StatementFunctionSet } from "../type/statement-function-set.ts";
 import type { TemplateObject } from "../type/template-object.ts";
+import type { Variables } from "../type/variables.ts";
 
 export class TBrushTemplate {
   #tree: Scope;
   
   #config: TBrushConfig | undefined;
 
-  #statementConfig: StatementFunctionSet = {
+  statementFunctions: StatementFunctionSet = {
     ...CORE_STATEMENTS
-  };
-
-  statements = {
-    add: (statements: StatementFunctionSet) => {
-      for (const keyword in statements)
-        this.#statementConfig[keyword] = statements[keyword];
-    },
-    remove: (...keywords: string[]) => {
-      for (const keyword of keywords)
-        delete this.#statementConfig[keyword];
-    }
   };
 
   constructor (page: string, config?: TBrushConfig) {
@@ -34,7 +25,28 @@ export class TBrushTemplate {
     this.#tree = composeNodeTree(list);
   }
 
+  addStatements(statements: StatementFunctionSet) {
+    for (const statement in statements)
+      this.statementFunctions[statement] = statements[statement];
+  }
+  removeStatements(...keywords: string[]) {
+    for (const keyword of keywords)
+      delete this.statementFunctions[keyword];
+  }
+  
+  getStatementCallback(variables: Variables): StatementCallback {
+    return (statement, vars) =>
+      this.statementFunctions[statement.keyword](statement, {
+        ...variables,
+        ...vars
+      }, this);
+  }
+
+  resolveScope(scope: Scope, variables: Variables): string {
+    return resolve(scope, variables, this.getStatementCallback(variables));
+  }
+
   apply(template: TemplateObject): string {
-    return resolve(this.#tree, template);
+    return resolve(this.#tree, template, this.getStatementCallback(template));
   }
 }

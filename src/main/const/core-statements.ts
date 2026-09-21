@@ -9,7 +9,7 @@ export const CORE_STATEMENTS: TBrush.StatementFunctionSet = {
     return template;
   },
 
-  escape({ children }, variables) {
+  escape({ children }, variables, template) {
     if (!children) return [];
 
     const escapes: Record<string, string> = {
@@ -21,7 +21,7 @@ export const CORE_STATEMENTS: TBrush.StatementFunctionSet = {
     };
 
     const regex = new RegExp(Object.keys(escapes).join("|"), "g");
-    const resolved = String(children.resolve(variables));
+    const resolved = String(children.resolve(template, variables));
     
     const string = resolved.replace(regex, i => "&" + escapes[i] + ";");
 

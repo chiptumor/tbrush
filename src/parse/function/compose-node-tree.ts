@@ -21,12 +21,14 @@ export function composeNodeTree(
         parent && (template.parent = parent);
         tree.push(template);
         break;
+
       case TokenType.Expression:
         const expression = new Expression(token.content);
         expression.originalText = "{{" + token.content + "}}";
         parent && (expression.parent = parent);
         tree.push(expression);
         break;
+
       case TokenType.StatementVoid:
         const statementVoid =
           new Statement(token.keyword, token.parameters, null);
@@ -34,6 +36,7 @@ export function composeNodeTree(
         parent && (statementVoid.parent = parent);
         tree.push(statementVoid);
         break;
+        
       case TokenType.StatementStart:
         const children: TokenList = [];
         let originalText = token.originalText;

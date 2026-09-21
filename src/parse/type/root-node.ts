@@ -1,3 +1,3 @@
-import type { AnyNode } from "./any-node.ts";
+import type { CoreNode } from "./core-node.ts";
 
-export type RootNode = AnyNode[];
+export type RootNode = CoreNode[];

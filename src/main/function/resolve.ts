@@ -1,41 +1,47 @@
-import { compileTemplateVariables } from "./compile-template-variables.ts";
 import { parseExpression } from "./parse-expression.ts";
 import { Expression } from "../../parse/class/expression.ts";
 import { Scope } from "../../parse/class/scope.ts";
 import { Statement } from "../../parse/class/statement.ts";
-import { Template } from "../../parse/class/scope.ts";
-import type { StatementFunctionSet } from "../type/statement-function-set.ts";
+import { Template } from "../../parse/class/template.ts";
 import type { Variables } from "../type/variables.ts";
-import type { AnyNode } from "../../parse/type/any-node.ts";
+import type { CoreNode } from "../../parse/type/core-node.ts";
 
 export function resolve(
   scope: Scope,
   upperVariables: Variables,
-  statementFunctions: StatementFunctionSet
+  statementCallback:
+    (statement: Statement, variables: Variables) => CoreNode | CoreNode[]
 ): string {
   const variables: Variables = {
     ...upperVariables,
     ...scope.variables
   };
   
-  const resolved: AnyNode[] = [];
+  const resolved: (Expression | Template)[] = [];
   
-  for (const node of scope) {
-    let result: AnyNode = node;
-    while (result instanceof Statement)
-      result = statementFunctions[node.keyword](node, variables);
+  for (const item of scope) {
+    let node: CoreNode = item;
+    while (node instanceof Statement) {
+      const statement = statementCallback(node, variables);
+      if (statement instanceof Array && !(statement instanceof Scope))
+        node = Scope.fromIterable(statement);
+      else
+        node = statement;
+    }
 
-    if (result instanceof Scope)
-      result = resolve(result, variables, statementFunctions);
+    if (node instanceof Scope) {
+      const string = resolve(node, variables, statementCallback);
+      node = new Template(string);
+    }
 
-    resolved.push(result);
+    resolved.push(node);
   }
   
   const templates: Template[] = [];
   
   for (const node of resolved) {
     const result: Template = node instanceof Expression
-      ? new Template(node.content)
+      ? new Template(parseExpression(node.content))
       : node;
     
     templates.push(result);
