@@ -3,16 +3,16 @@ import type { TokenList } from "../type/token-list.ts";
 
 const TBRUSH_REGEX = /\{\{(.+?)\}\}/gs;
 
-const STATEMENT_REGEX = /^@(.+)/;
+const STATEMENT_REGEX = /^@(.+)/s;
 
 // group 1 (\w+): keyword
 // group 2 (.*?): parameters
-const STATEMENT_START_REGEX = /^(\w+)\s*(?:\((.*?)\))?$/;
+const STATEMENT_START_REGEX = /^(\w+)\s*(?:\((.*?)\))?$/s;
 // group 1 (\w+): keyword
-const STATEMENT_END_REGEX = /^\/(\w+)/;
+const STATEMENT_END_REGEX = /^\/(\w+)/s;
 // group 1 (\w+): keyword
 // group 2 (.*?): parameters
-const STATEMENT_VOID_REGEX = /^(\w+)\s*(?:\((.*?)\))?\s*\/$/
+const STATEMENT_VOID_REGEX = /^(\w+)\s*(?:\((.*?)\))?\s*\/$/s;
 
 export function composeTokenList(page: string): TokenList {
   const templates = page
